@@ -23,6 +23,7 @@ Route::group([
 ], function () {
     Route::post('login', 'App\Http\Controllers\AuthController@login');
     Route::post('signup', 'App\Http\Controllers\AuthController@signUp');
+    Route::post('email', 'App\Http\Controllers\EmailController@contact');
 
     Route::group([
       'middleware' => 'auth:api'

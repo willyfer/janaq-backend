@@ -16,11 +16,17 @@ class AuthController extends Controller
     {
       
             if(!$request->has(['name','email','password','tipo_doc','doc','dir'])){
-                return response(["estado" => false, "mensaje" => "Los atributos permitidos son [name,email,password,tipo_doc,'dir']."]);
+                return   response()->json([
+                    'message' => 'Los atributos permitidos son [name,email,password,tipo_doc,dir].'
+                ],200);
+                 
             }
 
              if (!$request->filled(['name','email','password','tipo_doc','doc','dir'])) {
-                return response(["estado" => false, "mensaje" => "No se permite registrar datos vacíos."]);
+                 return   response()->json([
+                'message' => 'No se permite registrar datos vacíos.'
+                ],200);
+                
             }
         
             $name = is_null($request->input('name')) || $request->input('name') === "" ? null : trim(mb_strtoupper($request->input('name')));
@@ -28,13 +34,21 @@ class AuthController extends Controller
              
             if(!is_null($name)) {
                 if(!preg_match("/^[A-Z0-9ÁÉÍÓÚÜ.-_\s]+$/", $name)) { 
-                    return response(["estado" => false, "mensaje" => "El tipo de dato es incorrecto."]); 
+                     return   response()->json([
+                    'message' => 'El tipo de dato es incorrecto.'
+                ],200); 
                 }
-                if (mb_strlen($name) > 50) { 
-                    return response(["estado" => false, "mensaje" => "el campo nombre no cumple con las restricciones establecidas."]);
+                if (mb_strlen($name) >= 50) { 
+                     return   response()->json([
+                    'message' => 'el campo nombre no cumple con las restricciones establecidas.'
+                ],200);
+                    
                 }
             }else{
-                return response(["estado" => false, "mensaje" => "No se permiten datos nulos."]);
+                 return  response()->json([
+                    'message' => 'No se permiten datos nulos.'
+                ],200);
+                 
             }
   
             $user = new User([

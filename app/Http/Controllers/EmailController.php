@@ -8,7 +8,8 @@ class EmailController extends Controller
 {
     
     public function contact(Request $request){
-          $credentials = request('email');
+
+          $credentials = Request('email');
          $emailsend = $request->email();
         $subject = "Asunto del correo test";
         $for = $credentials;

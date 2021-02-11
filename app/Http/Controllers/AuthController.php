@@ -14,20 +14,30 @@ class AuthController extends Controller
 {
    public function signUp(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:50',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string',
-            'tipo_doc' => 'required|string',
-            'doc' => 'required|string|max:15',
-             'dir' => 'required|string|max:150'
-        ]);
-        // if(!$request->name){
-        //     return response()->json([
-        //     'message' => 'Successfully created user!'
-        // ], 201);
-        // }
-  $user = new User([
+      
+            if(!$request->has(['name','email','password','tipo_doc','doc','dir'])){
+                return response(["estado" => false, "mensaje" => "Los atributos permitidos son [name,email,password,tipo_doc,'dir']."]);
+            }
+
+             if (!$request->filled(['name','email','password','tipo_doc','doc','dir'])) {
+                return response(["estado" => false, "mensaje" => "No se permite registrar datos vacíos."]);
+            }
+        
+            $name = is_null($request->input('name')) || $request->input('name') === "" ? null : trim(mb_strtoupper($request->input('name')));
+            $email = is_null($request->input('email')) || $request->input('email') === "" ? null : trim(mb_strtoupper($request->input('email')));
+             
+            if(!is_null($name)) {
+                if(!preg_match("/^[A-Z0-9ÁÉÍÓÚÜ.-_\s]+$/", $name)) { 
+                    return response(["estado" => false, "mensaje" => "El tipo de dato es incorrecto."]); 
+                }
+                if (mb_strlen($name) > 50) { 
+                    return response(["estado" => false, "mensaje" => "el campo nombre no cumple con las restricciones establecidas."]);
+                }
+            }else{
+                return response(["estado" => false, "mensaje" => "No se permiten datos nulos."]);
+            }
+  
+            $user = new User([
             'name' => $request->name,
             'email' => $request->email,
             'dir' => $request->dir,
@@ -38,6 +48,11 @@ class AuthController extends Controller
         ]);
         $user->save();
 
+       
+
+           
+
+           
         // User::create([
         //     'name' => $request->name,
         //     'email' => $request->email,
